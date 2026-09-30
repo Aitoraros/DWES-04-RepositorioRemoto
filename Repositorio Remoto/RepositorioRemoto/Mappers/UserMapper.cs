@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using RepositorioRemoto.Dto;
+using RepositorioRemoto.Entity;
 using RepositorioRemoto.Models;
 
 namespace RepositorioRemoto.Mappers;
@@ -106,5 +107,51 @@ public static class UserMapper {
         CompaniaNombre = request.CompaniaNombre,
         CompaniaEslogan = request.CompaniaEslogan,
         CompaniaBs = request.CompaniaBs
+    };
+    
+    /// <summary>
+    /// Función de extensión encargada de mapear un UserEntity -> User
+    /// </summary>
+    /// <param name="entity">Entidad a mapear</param>
+    /// <returns>User mapeado</returns>
+    public static User ToModel(this UserEntity entity) => new() {
+        Id = entity.Id,
+        Alias = entity.Alias,
+        Nombre = entity.Nombre,
+        Email = entity.Email,
+        DireccionCalle = entity.DireccionCalle,
+        DireccionSuite = entity.DireccionSuite,
+        DireccionCiudad = entity.DireccionCiudad,
+        DireccionCodigoPostal = entity.DireccionCodigoPostal,
+        DireccionLatitud = entity.DireccionLatitud,
+        DireccionLongitud = entity.DireccionLongitud,
+        Telefono = entity.Telefono,
+        Web = entity.Web,
+        CompaniaNombre = entity.CompaniaNombre,
+        CompaniaEslogan = entity.CompaniaEslogan,
+        CompaniaBs = entity.CompaniaBs
+    };
+
+    /// <summary>
+    /// Función de extensión encargada de mapear un User -> UserEntity
+    /// </summary>
+    /// <param name="model">Modelo a mapear</param>
+    /// <returns>Entidad mapeada</returns>
+    public static UserEntity ToEntity(this User model) => new() {
+        Id = model.Id,
+        Alias = model.Alias,
+        Nombre = model.Nombre,
+        Email = model.Email,
+        DireccionCalle = model.DireccionCalle,
+        DireccionSuite = model.DireccionSuite,
+        DireccionCiudad = model.DireccionCiudad,
+        DireccionCodigoPostal = model.DireccionCodigoPostal,
+        DireccionLatitud = model.DireccionLatitud,
+        DireccionLongitud = model.DireccionLongitud,
+        Telefono = model.Telefono,
+        Web = model.Web,
+        CompaniaNombre = model.CompaniaNombre,
+        CompaniaEslogan = model.CompaniaEslogan,
+        CompaniaBs = model.CompaniaBs
     };
 }
