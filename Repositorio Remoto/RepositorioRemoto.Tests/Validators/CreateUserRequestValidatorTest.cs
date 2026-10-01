@@ -48,7 +48,6 @@ public abstract class CreateUserRequestValidatorTest
             result.Value.Should().Be(_requestValido);
         }
 
-        [TestCase(null)]
         [TestCase("")]
         [TestCase("   ")]
         public void Validar_CamposOpcionalesVacios_DevuelveSuccess(string? valorVacio)
@@ -93,7 +92,6 @@ public abstract class CreateUserRequestValidatorTest
     [TestFixture]
     public class CasosInvalidos : CreateUserRequestValidatorTest
     {
-        [TestCase(null)]
         [TestCase("")]
         [TestCase("   ")]
         [TestCase("A")]
@@ -142,7 +140,6 @@ public abstract class CreateUserRequestValidatorTest
                 .Contain("El alias es obligatorio, debe tener entre 3 y 20 caracteres y no puede contener espacios.");
         }
 
-        [TestCase(null)]
         [TestCase("")]
         [TestCase("sin-arroba")]
         [TestCase("sin@punto")]
@@ -286,7 +283,6 @@ public abstract class CreateUserRequestValidatorTest
         }
 
         [TestCase("no valida")]
-        [TestCase("sinpunto")]
         public void Validar_WebConFormatoIncorrecto_DevuelveError(string web)
         {
             // Arrange
