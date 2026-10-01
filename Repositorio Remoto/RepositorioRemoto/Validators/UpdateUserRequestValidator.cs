@@ -1,4 +1,4 @@
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using RepositorioRemoto.Dto;
 using RepositorioRemoto.Errors.Common;
 using RepositorioRemoto.Errors.User;
@@ -6,13 +6,13 @@ using Serilog;
 
 namespace RepositorioRemoto.Validators;
 
-/// <summary>Valida los datos de una petición de creación/actualización de usuario.</summary>
-public class CreateUserRequestValidator : IValidator<CreateUserRequest>
+/// <summary>Valida los datos de una petición de actualización de usuario.</summary>
+public class UpdateUserRequestValidator : IValidator<UpdateUserRequest>
 {
     /// <inheritdoc cref="IValidator{T}.Validar" />
-    public Result<CreateUserRequest, DomainError> Validar(CreateUserRequest request)
+    public Result<UpdateUserRequest, DomainError> Validar(UpdateUserRequest request)
     {
-        Log.Debug("🔵 Validando usuario con alias: {Alias}", request.Alias);
+        Log.Debug("🔵 Validando actualización del usuario con alias: {Alias}", request.Alias);
 
         var errores = new List<string>();
 
@@ -63,7 +63,7 @@ public class CreateUserRequestValidator : IValidator<CreateUserRequest>
             errores.Add("El campo 'bs' de la compañía no puede superar los 150 caracteres.");
 
         return errores.Count > 0
-            ? Result.Failure<CreateUserRequest, DomainError>(new UserErrors.Validation(errores))
-            : Result.Success<CreateUserRequest, DomainError>(request);
+            ? Result.Failure<UpdateUserRequest, DomainError>(new UserErrors.Validation(errores))
+            : Result.Success<UpdateUserRequest, DomainError>(request);
     }
 }
