@@ -2,6 +2,9 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=58c56b00_002Df81e_002D48fd_002Da74f_002Dc8e84271fcf4/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="3" IsActive="True" Name="Continuous Testing" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-04-RepositorioRemoto\Repositorio Remoto\RepositorioRemoto.Tests" Presentation="&amp;lt;RepositorioRemoto.Tests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8fe9a62e_002Dc759_002D4365_002D91f7_002D0be7a9c1d14a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;RepositorioRemoto.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-04-RepositorioRemoto\Repositorio Remoto\RepositorioRemoto.Tests" Presentation="&amp;lt;RepositorioRemoto.Tests&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fec08ca2_002Da71a_002D44a5_002Da4bc_002Df92e95664cd4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;RepositorioRemoto.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-04-RepositorioRemoto\Repositorio Remoto\RepositorioRemoto.Tests" Presentation="&amp;lt;RepositorioRemoto.Tests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
