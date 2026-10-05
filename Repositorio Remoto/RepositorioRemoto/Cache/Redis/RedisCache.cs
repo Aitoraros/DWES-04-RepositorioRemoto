@@ -6,7 +6,7 @@ using StackExchange.Redis;
 namespace RepositorioRemoto.Cache.Redis;
 
 /// <summary>
-/// Cache que implementa ICache usando Redis
+/// Cache que implementa ICache udando Redis
 /// </summary>
 /// <param name="redis">Conexion</param>
 public class RedisCache<TKey, TValue>(IConnectionMultiplexer redis, string prefix, TimeSpan? expiration = null) : ICache<TKey, TValue> where TKey : notnull {
@@ -20,7 +20,11 @@ public class RedisCache<TKey, TValue>(IConnectionMultiplexer redis, string prefi
         _logger.Debug("Guardando clave {Key} en Redis...", redisKey);
 
         var json = JsonSerializer.Serialize(value);
-        await _db.StringSetAsync(redisKey, json, expiration ?? TimeSpan.Zero);
+        if (expiration.HasValue) {
+            await _db.StringSetAsync(redisKey, json, expiration.Value);
+        } else {
+            await _db.StringSetAsync(redisKey, json);
+        }
 
         _logger.Debug("Clave {Key} guardada con éxito.", redisKey);
     }
@@ -31,8 +35,7 @@ public class RedisCache<TKey, TValue>(IConnectionMultiplexer redis, string prefi
         _logger.Debug("Buscando clave {Key} en Redis...", redisKey);
 
         var value = await _db.StringGetAsync(redisKey);
-        if (value.IsNullOrEmpty)
-        {
+        if (value.IsNullOrEmpty) {
             _logger.Debug("Clave {Key} no encontrada en Redis.", redisKey);
             return default;
         }

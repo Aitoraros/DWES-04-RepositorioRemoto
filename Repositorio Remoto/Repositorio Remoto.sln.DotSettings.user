@@ -1,6 +1,23 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=433dc32a_002D8583_002D4f24_002D982f_002D0218c10f2bf6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="RedisCacheTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::E78F4634-C8B9-7DBD-0954-F7B71BCE99F9::net10.0::RepositorioRemoto.Tests.Cache.Redis.RedisCacheTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=58c56b00_002Df81e_002D48fd_002Da74f_002Dc8e84271fcf4/@EntryIndexedValue">&lt;SessionState ContinuousTestingIsOn="True" ContinuousTestingMode="3" IsActive="True" Name="Continuous Testing" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-04-RepositorioRemoto\Repositorio Remoto\RepositorioRemoto.Tests" Presentation="&amp;lt;RepositorioRemoto.Tests&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8734888b_002D70a4_002D46e8_002D87c5_002D5309aaea17e7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from RedisCacheTest.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFile&gt;E78F4634-C8B9-7DBD-0954-F7B71BCE99F9/d:Cache/d:Redis/f:RedisCacheTest.cs&lt;/ProjectFile&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bfd19ab9_002D9fdb_002D418f_002D89a2_002D22d12f1d9054/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;RepositorioRemoto.Tests&amp;gt; #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\nickr\Desktop\git\DWES-04-RepositorioRemoto\Repositorio Remoto\RepositorioRemoto.Tests" Presentation="&amp;lt;RepositorioRemoto.Tests&amp;gt;" /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d7e84ccd_002D16ad_002D4560_002D8599_002D588bf0675beb/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from RedisCacheTest.cs #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFile&gt;E78F4634-C8B9-7DBD-0954-F7B71BCE99F9/d:Cache/d:Redis/f:RedisCacheTest.cs&lt;/ProjectFile&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=dd6966ac_002D725b_002D40a7_002Db04f_002D6879eb00187d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;RepositorioRemoto.Tests&amp;gt; #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="C:\Users\nickr\Desktop\git\DWES-04-RepositorioRemoto\Repositorio Remoto\RepositorioRemoto.Tests" Presentation="&amp;lt;RepositorioRemoto.Tests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=fec08ca2_002Da71a_002D44a5_002Da4bc_002Df92e95664cd4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from &amp;lt;RepositorioRemoto.Tests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;Project Location="C:\Users\aitor\Desktop\Proyectos2DAW-DWES\DWES-04-RepositorioRemoto\Repositorio Remoto\RepositorioRemoto.Tests" Presentation="&amp;lt;RepositorioRemoto.Tests&amp;gt;" /&gt;&#xD;
