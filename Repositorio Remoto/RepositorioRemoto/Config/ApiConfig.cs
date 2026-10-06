@@ -1,19 +1,21 @@
-﻿using Microsoft.Extensions.Configuration;
-
+﻿
 namespace RepositorioRemoto.Config;
 
+/// <summary>Configuración de la aplicación: API remota, sincronización y exportación.</summary>
 public class ApiConfig
 {
-    private static IConfigurationRoot Configuration { get; }
-    
-    // encendido
-    static ApiConfig() {
-        Configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json", false, true) // archivo no opcional y cambios reactivos
-            .Build();
-    }
+    /// <summary>Nombre de la sección en appsettings.json.</summary>
+    public const string Section = "ApiSettings";
 
-    public static string BaseUrl => 
-        Configuration.GetValue<string>("ApiSettings:BaseUrl") ?? "https://jsonplaceholder.typicode.com";
+    /// <summary>URL base de la API remota.</summary>
+    public static string BaseUrl { get; set; } = "https://jsonplaceholder.typicode.com";
+
+    /// <summary>Tiempo máximo de espera de cada petición a la API, en segundos.</summary>
+    public int TimeoutSeconds { get; set; } = 10;
+
+    /// <summary>Segundos entre una sincronización con la API y la siguiente.</summary>
+    public int SyncIntervalSeconds { get; set; } = 60;
+
+    /// <summary>Carpeta donde se guardan los ficheros JSON de la exportación.</summary>
+    public string ExportDirectory { get; set; } = "exports";
 }
