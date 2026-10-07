@@ -7,13 +7,22 @@ namespace RepositorioRemoto.Repositories;
 
 public class UserRepository(AppDbContext context) : IUserRepository
 {
-    public async Task<List<User>> GetAllAsync() =>
-        (await context.Users.AsNoTracking().ToListAsync()).Select(e => e.ToModel()).ToList();
+    public async Task<IEnumerable<User>> GetAllAsync()
+    {
+        var entities = await context.Users
+            .OrderBy(u => u.Id)
+            .ToListAsync();
 
-    public async Task<User?> GetByIdAsync(int id) =>
-        (await context.Users.FindAsync(id))?.ToModel();
+        return entities.Select(e => e.ToModel());
+    }
 
-    public async Task<User> AddAsync(User user)
+    public async Task<User?> GetByIdAsync(long id)
+    {
+        var entity = await context.Users.FindAsync(id);
+        return entity?.ToModel();
+    }
+
+    public async Task<User> CreateAsync(User user)
     {
         var entity = user.ToEntity();
         context.Users.Add(entity);
@@ -21,7 +30,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
         return entity.ToModel();
     }
 
-    public async Task<User?> UpdateAsync(int id, User user)
+    public async Task<User?> UpdateAsync(long id, User user)
     {
         var entity = await context.Users.FindAsync(id);
         if (entity is null) return null;
@@ -31,7 +40,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
         return entity.ToModel();
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(long id)
     {
         var entity = await context.Users.FindAsync(id);
         if (entity is null) return false;
@@ -39,6 +48,11 @@ public class UserRepository(AppDbContext context) : IUserRepository
         context.Users.Remove(entity);
         await context.SaveChangesAsync();
         return true;
+    }
+
+    public Task DeleteAllAsync()
+    {
+        throw new NotImplementedException();
     }
 
     public async Task ReplaceAllAsync(IEnumerable<User> users)
