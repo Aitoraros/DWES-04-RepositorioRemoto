@@ -16,4 +16,15 @@ public class ApiConfig
 
     public static string BaseUrl => 
         Configuration.GetValue<string>("ApiSettings:BaseUrl") ?? "https://jsonplaceholder.typicode.com";
+    
+    
+    public static string Environment =>
+        Configuration.GetValue<string>("AppSettings:Environment") ?? "Development";
+
+    public static string SqliteConnectionString =>
+        Configuration.GetConnectionString("Sqlite") ?? "Data Source=agenda.db";
+
+    public static string PostgresConnectionString =>
+        Configuration.GetConnectionString("PostgreSQL")
+        ?? throw new InvalidOperationException("Falta la cadena de conexión 'PostgreSQL' en appsettings.json");
 }
