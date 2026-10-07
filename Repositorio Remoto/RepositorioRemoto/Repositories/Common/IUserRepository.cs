@@ -1,6 +1,6 @@
 using RepositorioRemoto.Entity;
 
-namespace RepositorioRemoto.Repositories;
+namespace RepositorioRemoto.Repositories.Common;
 
 /// <summary>
 /// Interfaz a implementar por los repositorios
