@@ -1,46 +1,41 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RepositorioRemoto.Entity;
-using RepositorioRemoto.Mappers;
-using RepositorioRemoto.Models;
 
-namespace RepositorioRemoto.Repositories;
+namespace RepositorioRemoto.Repositories.Sqlite;
 
 public class UserRepository(AppDbContext context) : IUserRepository
 {
-    public async Task<IEnumerable<User>> GetAllAsync()
+    public async Task<IEnumerable<UserEntity>> GetAllAsync()
     {
-        var entities = await context.Users
+        return await context.Users
+            .AsNoTracking()
             .OrderBy(u => u.Id)
             .ToListAsync();
-
-        return entities.Select(e => e.ToModel());
     }
 
-    public async Task<User?> GetByIdAsync(long id)
+    public async Task<UserEntity?> GetByIdAsync(int id)
     {
-        var entity = await context.Users.FindAsync(id);
-        return entity?.ToModel();
+        return await context.Users.FindAsync(id);
     }
 
-    public async Task<User> CreateAsync(User user)
+    public async Task<UserEntity> CreateAsync(UserEntity user)
     {
-        var entity = user.ToEntity();
-        context.Users.Add(entity);
+        context.Users.Add(user);
         await context.SaveChangesAsync();
-        return entity.ToModel();
+        return user;
     }
 
-    public async Task<User?> UpdateAsync(long id, User user)
+    public async Task<UserEntity?> UpdateAsync(UserEntity user)
     {
-        var entity = await context.Users.FindAsync(id);
+        var entity = await context.Users.FindAsync(user.Id);
         if (entity is null) return null;
 
-        context.Entry(entity).CurrentValues.SetValues(user.ToEntity());
+        context.Entry(entity).CurrentValues.SetValues(user);
         await context.SaveChangesAsync();
-        return entity.ToModel();
+        return entity;
     }
 
-    public async Task<bool> DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(int id)
     {
         var entity = await context.Users.FindAsync(id);
         if (entity is null) return false;
@@ -50,16 +45,15 @@ public class UserRepository(AppDbContext context) : IUserRepository
         return true;
     }
 
-    public Task DeleteAllAsync()
+    public async Task InsertRangeAsync(IEnumerable<UserEntity> users)
     {
-        throw new NotImplementedException();
+        context.Users.AddRange(users);
+        await context.SaveChangesAsync();
     }
 
-    public async Task ReplaceAllAsync(IEnumerable<User> users)
+    public async Task DeleteAllAsync()
     {
         await context.Users.ExecuteDeleteAsync();
         context.ChangeTracker.Clear();
-        context.Users.AddRange(users.Select(u => u.ToEntity()));
-        await context.SaveChangesAsync();
     }
 }

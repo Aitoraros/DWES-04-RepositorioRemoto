@@ -1,13 +1,42 @@
-﻿using RepositorioRemoto.Models;
+﻿using RepositorioRemoto.Entity;
+using RepositorioRemoto.Models;
 
 namespace RepositorioRemoto.Repositories;
 
-public interface IUserRepository
-{
-    Task<List<User>> GetAllAsync();
-    Task<User?> GetByIdAsync(int id);
-    Task<User> AddAsync(User user);
-    Task<User?> UpdateAsync(int id, User user);
+public interface IUserRepository {
+    
+    /// <summary>
+    /// Obtener todos
+    /// </summary>
+    Task<IEnumerable<UserEntity>> GetAllAsync();
+    
+    /// <summary>
+    /// Obtener usuario en base a un ID
+    /// </summary>
+    Task<UserEntity?> GetByIdAsync(int id);
+    
+    /// <summary>
+    /// Crear un usuario pasado
+    /// </summary>
+    Task<UserEntity> CreateAsync(UserEntity user);
+    
+    /// <summary>
+    /// Actualizar un usuario pasado
+    /// </summary>
+    Task<UserEntity?> UpdateAsync(UserEntity user);
+    
+    /// <summary>
+    /// Elimina a un user en base al ID
+    /// </summary>
     Task<bool> DeleteAsync(int id);
-    Task ReplaceAllAsync(IEnumerable<User> users);   // borra todo e inserta (arranque y sincronización)
+    
+    /// <summary>
+    /// Inserta una lista de usuarios
+    /// </summary>
+    Task InsertRangeAsync(IEnumerable<UserEntity> users);
+    
+    /// <summary>
+    /// Elimina todos los datos
+    /// </summary>
+    Task DeleteAllAsync();
 }

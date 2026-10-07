@@ -114,7 +114,7 @@ public static class UserMapper {
     /// </summary>
     /// <param name="entity">Entidad a mapear</param>
     /// <returns>User mapeado</returns>
-    public static User ToModel(this UserEntity entity) => new() {
+    public static UserEntity ToModel(this UserEntity entity) => new() {
         Id = entity.Id,
         Alias = entity.Alias,
         Nombre = entity.Nombre,
