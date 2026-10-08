@@ -41,4 +41,7 @@ public class AppConfig
 
     public static bool RedisDropData =>
         Configuration.GetValue<bool>("RedisSettings:DropData");
+    
+    public static string ExportDirectory =>
+        Configuration.GetValue<string>("ApiSettings:ExportDirectory") ?? "exports";
 }
