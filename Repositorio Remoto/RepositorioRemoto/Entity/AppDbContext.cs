@@ -29,13 +29,11 @@ public class AppDbContext : DbContext
     }
 
     /// <inheritdoc />
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<UserEntity>(entity =>
-        {
-            entity.ToTable("Users");
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<UserEntity>(entity => {
+            entity.ToTable("users");
             entity.HasKey(u => u.Id);
-            entity.Property(u => u.Id).ValueGeneratedNever();   // El ID lo proporciona la API remoto, no SQLite
+            entity.Property(u => u.Id).ValueGeneratedNever(); // El ID lo proporciona la API remoto, no SQLite
         });
     }
 
