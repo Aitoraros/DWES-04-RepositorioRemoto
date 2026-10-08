@@ -50,12 +50,12 @@ public class UserService(
     /// <inheritdoc />
     public async Task<Result<User, DomainError>> GetByIdAsync(int id)
     {
-        // 1. Caché
+        // cahce
         var cacheado = await cache.Get(id);
         if (cacheado is not null)
             return Result.Success<User, DomainError>(cacheado);
 
-        // 2. BD local
+        // repository
         var local = await repository.GetByIdAsync(id);
         if (local is not null)
         {
@@ -64,7 +64,7 @@ public class UserService(
             return Result.Success<User, DomainError>(modelo);
         }
 
-        // 3. API remota
+        // api
         try
         {
             var respuesta = await api.GetByIdAsync(id);
