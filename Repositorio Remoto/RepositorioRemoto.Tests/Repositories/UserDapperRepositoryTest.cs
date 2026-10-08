@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using RepositorioRemoto.Entity;
 using RepositorioRemoto.Repositories.Dapper;
@@ -9,7 +9,7 @@ namespace RepositorioRemoto.Tests.Repositories;
 public class UserDapperRepositoryTest {
     
     private PostgreSqlContainer _container = null!;
-    private static UserDapperRepository _repository = null!;
+    private UserDapperRepository _repository = null!;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp() {
@@ -32,8 +32,7 @@ public class UserDapperRepositoryTest {
     }
 
     [OneTimeTearDown]
-    public async Task OneTimeTearDown()
-    {
+    public async Task OneTimeTearDown() {
         await _container.DisposeAsync();
     }
 
@@ -46,7 +45,7 @@ public class UserDapperRepositoryTest {
             new DbContextOptionsBuilder<AppDbContext>()
                 .UseNpgsql(_container.GetConnectionString())
                 .Options);
-        await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"Users\"");
+        await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE \"users\"");
     }
 
     private static UserEntity CrearUsuario(int id, string alias = "test") => new() {
@@ -73,13 +72,13 @@ public class UserDapperRepositoryTest {
         [Test]
         public async Task Create_UsuarioValido_DeberiaCrearConId() {
             
-            // Arrange
+            // arrange
             var usuario = CrearUsuario(1);
 
-            // Act
+            // act
             var resultado = await _repository.CreateAsync(usuario);
 
-            // Assert
+            // assert
             resultado.Should().NotBeNull();
             resultado.Id.Should().Be(1);
             resultado.Alias.Should().Be("test");
@@ -88,27 +87,27 @@ public class UserDapperRepositoryTest {
         [Test]
         public async Task GetAll_ConDatos_DeberiaRetornarTodos() {
             
-            // Arrange
+            // arrange
             await _repository.CreateAsync(CrearUsuario(1, "uno"));
             await _repository.CreateAsync(CrearUsuario(2, "dos"));
 
-            // Act
+            // act
             var resultados = await _repository.GetAllAsync();
 
-            // Assert
+            // assert
             resultados.Should().HaveCount(2);
         }
 
         [Test]
         public async Task GetById_Existente_DeberiaRetornarUsuario() {
             
-            // Arrange
+            // arrange
             var creado = await _repository.CreateAsync(CrearUsuario(1, "nick"));
 
-            // Act
+            // act
             var encontrado = await _repository.GetByIdAsync(creado.Id);
 
-            // Assert
+            // assert
             encontrado.Should().NotBeNull();
             encontrado!.Alias.Should().Be("nick");
         }
@@ -116,14 +115,14 @@ public class UserDapperRepositoryTest {
         [Test]
         public async Task Update_Existente_DeberiaActualizar() {
             
-            // Arrange
+            // arrange
             var creado = await _repository.CreateAsync(CrearUsuario(1));
             creado.Nombre = "Nombre Actualizado";
 
-            // Act
+            // act
             var resultado = await _repository.UpdateAsync(creado);
 
-            // Assert
+            // assert
             resultado.Should().NotBeNull();
             resultado!.Nombre.Should().Be("Nombre Actualizado");
         }
@@ -131,13 +130,13 @@ public class UserDapperRepositoryTest {
         [Test]
         public async Task Delete_Existente_DeberiaEliminar() {
             
-            // Arrange
+            // arrange
             var creado = await _repository.CreateAsync(CrearUsuario(1));
 
-            // Act
+            // act
             var eliminado = await _repository.DeleteAsync(creado.Id);
 
-            // Assert
+            // assert
             eliminado.Should().BeTrue();
             var verificacion = await _repository.GetByIdAsync(creado.Id);
             verificacion.Should().BeNull();
@@ -146,13 +145,13 @@ public class UserDapperRepositoryTest {
         [Test]
         public async Task InsertRange_DeberiaInsertarTodos() {
             
-            // Arrange
+            // arrange
             var usuarios = new[] { CrearUsuario(1, "uno"), CrearUsuario(2, "dos") };
 
-            // Act
+            // act
             await _repository.InsertRangeAsync(usuarios);
 
-            // Assert
+            // assert
             var resultados = await _repository.GetAllAsync();
             resultados.Should().HaveCount(2);
         }
@@ -160,14 +159,14 @@ public class UserDapperRepositoryTest {
         [Test]
         public async Task DeleteAll_DeberiaEliminarTodos() {
             
-            // Arrange
+            // arrange
             await _repository.CreateAsync(CrearUsuario(1));
             await _repository.CreateAsync(CrearUsuario(2));
 
-            // Act
+            // act
             await _repository.DeleteAllAsync();
 
-            // Assert
+            // assert
             var resultados = await _repository.GetAllAsync();
             resultados.Should().BeEmpty();
         }
@@ -179,34 +178,44 @@ public class UserDapperRepositoryTest {
         [Test]
         public async Task GetById_Inexistente_DeberiaRetornarNull() {
             
-            // Arrange & Act
+            // arrange & act
             var resultado = await _repository.GetByIdAsync(9999);
 
-            // Assert
+            // assert
             resultado.Should().BeNull();
         }
 
         [Test]
         public async Task Update_Inexistente_DeberiaRetornarNull() {
             
-            // Arrange
+            // arrange
             var usuario = CrearUsuario(9999);
 
-            // Act
+            // act
             var resultado = await _repository.UpdateAsync(usuario);
 
-            // Assert
+            // assert
             resultado.Should().BeNull();
         }
 
         [Test]
         public async Task Delete_Inexistente_DeberiaRetornarFalse() {
             
-            // Arrange & Act
+            // arrange & act
             var eliminado = await _repository.DeleteAsync(9999);
 
-            // Assert
+            // assert
             eliminado.Should().BeFalse();
+        }
+        
+        [Test]
+        public async Task EnsureCreatedAsync_DeberiaEjecutarseSinLanzarExcepciones() {
+            
+            // act
+            var act = async () => await _repository.EnsureCreatedAsync();
+
+            // assert
+            await act.Should().NotThrowAsync();
         }
     }
 }
