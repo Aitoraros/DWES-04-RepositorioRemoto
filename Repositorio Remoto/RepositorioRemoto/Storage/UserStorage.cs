@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using RepositorioRemoto.Entity;
+using RepositorioRemoto.Models;
 
 namespace RepositorioRemoto.Storage;
 
@@ -10,7 +10,7 @@ public class UserStorage(string directorio) : IUserStorage
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
     /// <inheritdoc />
-    public async Task<string> ExportAsync(IEnumerable<UserEntity> users)
+    public async Task<string> ExportAsync(IEnumerable<User> users)
     {
         ArgumentNullException.ThrowIfNull(users);
         

@@ -6,11 +6,13 @@ using RepositorioRemoto.Cache.Common;
 using RepositorioRemoto.Dto;
 using RepositorioRemoto.Errors.Api;
 using RepositorioRemoto.Errors.Common;
+using RepositorioRemoto.Errors.Storage;
 using RepositorioRemoto.Errors.User;
 using RepositorioRemoto.Mappers;
 using RepositorioRemoto.Models;
 using RepositorioRemoto.Repositories.Common;
 using RepositorioRemoto.Services.Notificactions;
+using RepositorioRemoto.Storage;
 using RepositorioRemoto.Validators;
 using Serilog;
 
@@ -22,7 +24,8 @@ public class UserService(
     IUserRepository repository,
     ICache<int, User> cache,
     IJsonPlaceholderApi api, 
-    INotificationService notificationService) : IUserService
+    INotificationService notificationService,
+    IUserStorage storage) : IUserService
 {
     private readonly ILogger _logger = Log.ForContext<UserService>();
 
@@ -177,6 +180,24 @@ public class UserService(
         catch (ApiException ex)
         {
             return Result.Failure<User, DomainError>(ApiErrors.BadResponse((int)ex.StatusCode, ex.Message));
+        }
+    }
+
+    public async Task<Result<string, DomainError>> ExportAsync()
+    {
+        try
+        {
+            var usuarios = (await GetAllAsync()).ToList();
+            var ruta = await storage.ExportAsync(usuarios);
+
+            _logger.Information("Usuarios exportados a {Ruta}.", ruta);
+
+            return Result.Success<string, DomainError>(ruta);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "No se pudo exportar la lista de usuarios.");
+            return Result.Failure<string, DomainError>(StorageErrors.WriteError(ex.Message));
         }
     }
 }

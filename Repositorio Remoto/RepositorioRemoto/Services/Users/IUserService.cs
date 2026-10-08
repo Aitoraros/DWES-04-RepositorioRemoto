@@ -11,4 +11,5 @@ public interface IUserService {
     Task<Result<User, DomainError>> CreateAsync(CreateUserRequest request);
     Task<Result<User, DomainError>> UpdateAsync(int id, UpdateUserRequest request);
     Task<Result<User, DomainError>> DeleteAsync(int id);
+    Task<Result<string, DomainError>> ExportAsync();
 }

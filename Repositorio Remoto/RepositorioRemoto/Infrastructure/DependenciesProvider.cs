@@ -17,8 +17,11 @@ using RepositorioRemoto.Services.Background;
 using RepositorioRemoto.Services.Notificactions;
 using RepositorioRemoto.Services.Notifications;
 using RepositorioRemoto.Services.Users;
+using RepositorioRemoto.Storage;
 using RepositorioRemoto.Validators;
 using StackExchange.Redis;
+
+namespace RepositorioRemoto.Infrastructure;
 
 /// <summary>
 /// Config. de ID manual
@@ -86,13 +89,14 @@ public static class DependenciesProvider
                 new RedisCache<int, User>(sp.GetRequiredService<IConnectionMultiplexer>(), prefix: "user"));
         }
 
+        // ---------- almacenamiento / exportación ----------
+        services.AddSingleton<IUserStorage>(_ => new UserStorage(AppConfig.ExportDirectory));
+
         // ---------- validadores ----------
         services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
         services.AddScoped<IValidator<UpdateUserRequest>, UpdateUserRequestValidator>();
 
         // ---------- notificaciones (Rx.NET) ----------
-        // Singleton obligatorio: el Subject interno debe ser el mismo para quien
-        // emite (UserService) y para quien se suscribe (Program.cs)
         services.AddSingleton<INotificationService, NotificationService>();
 
         // ---------- servicio principal ----------

@@ -8,11 +8,13 @@ using RepositorioRemoto.Cache.Common;
 using RepositorioRemoto.Dto;
 using RepositorioRemoto.Entity;
 using RepositorioRemoto.Errors.Common;
+using RepositorioRemoto.Errors.Storage;
 using RepositorioRemoto.Errors.User;
 using RepositorioRemoto.Models;
 using RepositorioRemoto.Repositories.Common;
 using RepositorioRemoto.Services.Notificactions;
 using RepositorioRemoto.Services.Users;
+using RepositorioRemoto.Storage;
 using RepositorioRemoto.Validators;
 
 namespace RepositorioRemoto.Tests.Services;
@@ -26,6 +28,7 @@ public abstract class UserServiceTest
         private Mock<IUserRepository> _repository = null!;
         private Mock<ICache<int, User>> _cache = null!;
         private Mock<IJsonPlaceholderApi> _api = null!;
+        private Mock<IUserStorage> _storage = null!;
         private Mock<INotificationService> _notificationService = null!;
         private UserService _service = null!;
 
@@ -36,8 +39,9 @@ public abstract class UserServiceTest
             _repository = new Mock<IUserRepository>();
             _cache = new Mock<ICache<int, User>>();
             _api = new Mock<IJsonPlaceholderApi>();
+            _storage = new Mock<IUserStorage>();
             _notificationService = new Mock<INotificationService>();
-            _service = new UserService(_createValidator.Object, _updateValidator.Object, _repository.Object, _cache.Object, _api.Object, _notificationService.Object);
+            _service = new UserService(_createValidator.Object, _updateValidator.Object, _repository.Object, _cache.Object, _api.Object, _notificationService.Object,  _storage.Object);
 
             
             _createValidator.Setup(v => v.Validar(It.IsAny<CreateUserRequest>()))
@@ -147,6 +151,31 @@ public abstract class UserServiceTest
             _repository.Verify(r => r.DeleteAsync(4), Times.Once);
             _cache.Verify(c => c.Remove(4), Times.Once);
         }
+        
+        [Test]
+        public async Task ExportAsync_ConDatosEnBd_ExportaLosUsuariosYDevuelveLaRuta() {
+            _repository.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<UserEntity> { Entity(1), Entity(2) });
+            _storage.Setup(s => s.ExportAsync(It.IsAny<IEnumerable<User>>())).ReturnsAsync("usuarios.json");
+
+            var resultado = await _service.ExportAsync();
+
+            resultado.IsSuccess.Should().BeTrue();
+            resultado.Value.Should().Be("usuarios.json");
+            _storage.Verify(s => s.ExportAsync(It.Is<IEnumerable<User>>(u => u.Count() == 2)), Times.Once);
+            _api.Verify(a => a.GetAllAsync(), Times.Never);
+        }
+
+        [Test]
+        public async Task ExportAsync_BdVaciaYApiOk_ExportaLosUsuariosDeLaApi() {
+            _repository.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<UserEntity>());
+            _api.Setup(a => a.GetAllAsync()).ReturnsAsync([Dto(1), Dto(2), Dto(3)]);
+            _storage.Setup(s => s.ExportAsync(It.IsAny<IEnumerable<User>>())).ReturnsAsync("usuarios.json");
+
+            var resultado = await _service.ExportAsync();
+
+            resultado.IsSuccess.Should().BeTrue();
+            _storage.Verify(s => s.ExportAsync(It.Is<IEnumerable<User>>(u => u.Count() == 3)), Times.Once);
+        }
     }
 
     [TestFixture]
@@ -156,6 +185,7 @@ public abstract class UserServiceTest
         private Mock<IUserRepository> _repository = null!;
         private Mock<ICache<int, User>> _cache = null!;
         private Mock<IJsonPlaceholderApi> _api = null!;
+        private Mock<IUserStorage> _storage = null!;
         private Mock<INotificationService> _notificationService = null!;
         private UserService _service = null!;
 
@@ -166,8 +196,9 @@ public abstract class UserServiceTest
             _repository = new Mock<IUserRepository>();
             _cache = new Mock<ICache<int, User>>();
             _api = new Mock<IJsonPlaceholderApi>();
+            _storage = new Mock<IUserStorage>();
             _notificationService = new Mock<INotificationService>();
-            _service = new UserService(_createValidator.Object, _updateValidator.Object, _repository.Object, _cache.Object, _api.Object, _notificationService.Object);
+            _service = new UserService(_createValidator.Object, _updateValidator.Object, _repository.Object, _cache.Object, _api.Object, _notificationService.Object,  _storage.Object);
 
             _createValidator.Setup(v => v.Validar(It.IsAny<CreateUserRequest>()))
                 .Returns((CreateUserRequest r) => Result.Success<CreateUserRequest, DomainError>(r));
@@ -288,6 +319,44 @@ public abstract class UserServiceTest
 
             resultado.IsFailure.Should().BeTrue();
             _repository.Verify(r => r.DeleteAsync(It.IsAny<int>()), Times.Never);
+        }
+        
+        [Test]
+        public async Task ExportAsync_StorageLanzaIOException_DevuelveWriteError() {
+            _repository.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<UserEntity> { Entity(1) });
+            _storage.Setup(s => s.ExportAsync(It.IsAny<IEnumerable<User>>()))
+                .ThrowsAsync(new IOException("disco lleno"));
+
+            var resultado = await _service.ExportAsync();
+
+            resultado.IsFailure.Should().BeTrue();
+            resultado.Error.Should().BeOfType<StorageError.WriteError>();
+            resultado.Error.Message.Should().Contain("disco lleno");
+        }
+
+        [Test]
+        public async Task ExportAsync_StorageLanzaUnauthorizedAccess_DevuelveWriteError() {
+            _repository.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<UserEntity> { Entity(1) });
+            _storage.Setup(s => s.ExportAsync(It.IsAny<IEnumerable<User>>()))
+                .ThrowsAsync(new UnauthorizedAccessException("sin permisos"));
+
+            var resultado = await _service.ExportAsync();
+
+            resultado.IsFailure.Should().BeTrue();
+            resultado.Error.Should().BeOfType<StorageError.WriteError>();
+            resultado.Error.Message.Should().Contain("sin permisos");
+        }
+
+        [Test]
+        public async Task ExportAsync_BdVaciaYApiFalla_ExportaListaVacia() {
+            _repository.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<UserEntity>());
+            _api.Setup(a => a.GetAllAsync()).ThrowsAsync(await CrearApiException(HttpStatusCode.InternalServerError));
+            _storage.Setup(s => s.ExportAsync(It.IsAny<IEnumerable<User>>())).ReturnsAsync("usuarios.json");
+
+            var resultado = await _service.ExportAsync();
+
+            resultado.IsSuccess.Should().BeTrue();
+            _storage.Verify(s => s.ExportAsync(It.Is<IEnumerable<User>>(u => !u.Any())), Times.Once);
         }
     }
 

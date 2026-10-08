@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using FluentAssertions;
-using NUnit.Framework;
 using RepositorioRemoto.Entity;
+using RepositorioRemoto.Models;
 using RepositorioRemoto.Storage;
 
 namespace RepositorioRemoto.Tests.Storage;
@@ -29,9 +29,9 @@ public abstract class JsonUserStorageTest
         if (Directory.Exists(raiz)) Directory.Delete(raiz, true);
     }
 
-    protected static List<UserEntity> CrearUsuarios(int cantidad) =>
+    protected static List<User> CrearUsuarios(int cantidad) =>
         Enumerable.Range(1, cantidad)
-            .Select(i => new UserEntity
+            .Select(i => new User
             {
                 Id = i,
                 Alias = $"alias{i}",
@@ -84,7 +84,7 @@ public abstract class JsonUserStorageTest
         public async Task ExportAsync_UsuariosNull_LanzaArgumentNullException()
         {
             // Arrange
-            IEnumerable<UserEntity> usuarios = null!;
+            IEnumerable<User> usuarios = null!;
 
             // Act
             Func<Task> accion = () => storage.ExportAsync(usuarios);

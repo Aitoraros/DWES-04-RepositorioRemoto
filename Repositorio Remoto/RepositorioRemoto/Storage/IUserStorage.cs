@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.Extensions.Options;
-using RepositorioRemoto.Config;
-using RepositorioRemoto.Entity;
+﻿using RepositorioRemoto.Models;
 
 namespace RepositorioRemoto.Storage;
 
@@ -11,5 +8,5 @@ public interface IUserStorage
     /// <summary>Exporta los usuarios a un fichero y devuelve su ruta.</summary>
     /// <param name="users">Usuarios a exportar.</param>
     /// <returns>Ruta completa del fichero generado.</returns>
-    Task<string> ExportAsync(IEnumerable<UserEntity> users);
+    Task<string> ExportAsync(IEnumerable<User> users);
 }
