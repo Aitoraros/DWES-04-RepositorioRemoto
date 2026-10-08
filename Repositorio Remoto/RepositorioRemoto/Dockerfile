@@ -18,4 +18,8 @@ RUN dotnet publish "./RepositorioRemoto.csproj" -c $BUILD_CONFIGURATION -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Por defecto Production; docker-compose lo sobreescribe según el servicio
+ENV DOTNET_ENVIRONMENT=Production
+
 ENTRYPOINT ["dotnet", "RepositorioRemoto.dll"]

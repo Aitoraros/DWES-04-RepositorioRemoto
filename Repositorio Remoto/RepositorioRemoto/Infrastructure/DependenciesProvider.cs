@@ -17,11 +17,8 @@ using RepositorioRemoto.Services.Background;
 using RepositorioRemoto.Services.Notificactions;
 using RepositorioRemoto.Services.Notifications;
 using RepositorioRemoto.Services.Users;
-using RepositorioRemoto.Storage;
 using RepositorioRemoto.Validators;
 using StackExchange.Redis;
-
-namespace RepositorioRemoto.Infrastructure;
 
 /// <summary>
 /// Config. de ID manual
@@ -32,10 +29,11 @@ public static class DependenciesProvider
     {
         var services = new ServiceCollection();
 
-        // api (Refit)
+        // ---------- api (Refit) ----------
         services.AddRefitClient<IJsonPlaceholderApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(AppConfig.BaseUrl));
 
+        // ---------- repositorio + caché: según entorno ----------
         if (AppConfig.IsDevelopment)
         {
             // Development: SQLite + MemoryCache (sin infraestructura externa)
@@ -44,9 +42,9 @@ public static class DependenciesProvider
 
             // crear la BD y las tablas si no existen
             using (var context = new AppDbContext(
-                       new DbContextOptionsBuilder<AppDbContext>()
-                           .UseSqlite(AppConfig.SqliteConnectionString)
-                           .Options))
+                new DbContextOptionsBuilder<AppDbContext>()
+                    .UseSqlite(AppConfig.SqliteConnectionString)
+                    .Options))
             {
                 context.Database.EnsureCreated();
             }
@@ -59,7 +57,7 @@ public static class DependenciesProvider
         }
         else
         {
-            // prod -> postre + redis
+            // Production: PostgreSQL + Redis
             using (var context = new AppDbContext(
                 new DbContextOptionsBuilder<AppDbContext>()
                     .UseNpgsql(AppConfig.PostgresConnectionString)
@@ -75,9 +73,11 @@ public static class DependenciesProvider
             {
                 var multiplexer = ConnectionMultiplexer.Connect(AppConfig.RedisConnectionString);
 
-                if (!AppConfig.RedisDropData) return multiplexer;
-                var server = multiplexer.GetServer(multiplexer.GetEndPoints().First());
-                server.FlushDatabase();
+                if (AppConfig.RedisDropData)
+                {
+                    var server = multiplexer.GetServer(multiplexer.GetEndPoints().First());
+                    server.FlushDatabase();
+                }
 
                 return multiplexer;
             });
@@ -86,17 +86,20 @@ public static class DependenciesProvider
                 new RedisCache<int, User>(sp.GetRequiredService<IConnectionMultiplexer>(), prefix: "user"));
         }
 
-        // validadores
+        // ---------- validadores ----------
         services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
         services.AddScoped<IValidator<UpdateUserRequest>, UpdateUserRequestValidator>();
 
-        // servicio
-        services.AddScoped<IUserService, UserService>();
+        // ---------- notificaciones (Rx.NET) ----------
+        // Singleton obligatorio: el Subject interno debe ser el mismo para quien
+        // emite (UserService) y para quien se suscribe (Program.cs)
         services.AddSingleton<INotificationService, NotificationService>();
-        services.AddSingleton<BackgroundService>();
 
-        // storage de exportación a JSON
-        services.AddSingleton<IUserStorage>(_ => new UserStorage(AppConfig.ExportDirectory));
+        // ---------- servicio principal ----------
+        services.AddScoped<IUserService, UserService>();
+
+        // ---------- sincronización en segundo plano ----------
+        services.AddSingleton<BackgroundService>();
 
         return services.BuildServiceProvider();
     }

@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="compose.yaml" />
+  </Folder>
   <Project Path="RepositorioRemoto.Tests/RepositorioRemoto.Tests.csproj" />
   <Project Path="RepositorioRemoto/RepositorioRemoto.csproj" />
 </Solution>
