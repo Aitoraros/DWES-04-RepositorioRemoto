@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RepositorioRemoto.Services;
+using RepositorioRemoto.Services.Users;
 
 namespace RepositorioRemoto.Infrastructure;
 

@@ -13,7 +13,7 @@ using RepositorioRemoto.Repositories.Common;
 using RepositorioRemoto.Validators;
 using Serilog;
 
-namespace RepositorioRemoto.Services;
+namespace RepositorioRemoto.Services.Users;
 
 public class UserService(
     IValidator<CreateUserRequest> createValidator,

@@ -3,7 +3,7 @@ using RepositorioRemoto.Dto;
 using RepositorioRemoto.Errors.Common;
 using RepositorioRemoto.Models;
 
-namespace RepositorioRemoto.Services;
+namespace RepositorioRemoto.Services.Users;
 
 public interface IUserService {
     Task<IEnumerable<User>> GetAllAsync();

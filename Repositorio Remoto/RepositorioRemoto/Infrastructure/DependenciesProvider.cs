@@ -13,7 +13,7 @@ using RepositorioRemoto.Models;
 using RepositorioRemoto.Repositories.Common;
 using RepositorioRemoto.Repositories.Dapper;
 using RepositorioRemoto.Repositories.Sqlite;
-using RepositorioRemoto.Services;
+using RepositorioRemoto.Services.Users;
 using RepositorioRemoto.Storage;
 using RepositorioRemoto.Validators;
 using StackExchange.Redis;

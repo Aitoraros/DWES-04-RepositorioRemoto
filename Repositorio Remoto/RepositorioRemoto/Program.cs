@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RepositorioRemoto.Dto;
 using RepositorioRemoto.Infrastructure;
-using RepositorioRemoto.Services;
+using RepositorioRemoto.Services.Users;
 
 var provider = DependenciesProvider.BuildServiceProvider();
 var scope = provider.CreateScope();
