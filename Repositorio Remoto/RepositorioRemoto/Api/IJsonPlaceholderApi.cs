@@ -7,17 +7,17 @@ namespace RepositorioRemoto.Api;
 public interface IJsonPlaceholderApi
 {
     [Get("/users")]
-    Task<ApiResponse<List<UserDto>>> GetAllAsync();
+    Task<List<UserDto>> GetAllAsync();
 
     [Get("/users/{id}")]
-    Task<ApiResponse<UserDto>> GetByIdAsync(int id);
+    Task<UserDto> GetByIdAsync(int id);
 
     [Post("/users")]
-    Task<ApiResponse<UserDto>> CreateAsync([Body] UserDto user);
+    Task<UserDto> CreateAsync([Body] UserDto user);
 
     [Put("/users/{id}")]
-    Task<ApiResponse<UserDto>> UpdateAsync(int id, [Body] UserDto user);
+    Task<UserDto> UpdateAsync(int id, [Body] UserDto user);
 
     [Delete("/users/{id}")]
-    Task<IApiResponse> DeleteAsync(int id);
+    Task DeleteAsync(int id);
 }
