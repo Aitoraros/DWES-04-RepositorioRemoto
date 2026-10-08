@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RepositorioRemoto.Entity;
+using RepositorioRemoto.Repositories.Common;
 
 namespace RepositorioRemoto.Repositories.Sqlite;
 
-public class UserRepository(AppDbContext context) : IUserRepository
+public class UserEfcoreRepository(AppDbContext context) : IUserRepository
 {
     public async Task<IEnumerable<UserEntity>> GetAllAsync()
     {

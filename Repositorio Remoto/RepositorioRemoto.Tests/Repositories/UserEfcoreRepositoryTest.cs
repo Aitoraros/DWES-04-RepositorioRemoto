@@ -7,12 +7,12 @@ using Testcontainers.PostgreSql;
 namespace RepositorioRemoto.Tests.Repositories;
 
 [TestFixture]
-public abstract class UserRepositoryTest
+public abstract class UserEfcoreRepositoryTest
 {
     private static PostgreSqlContainer _dbContainer = null!;
 
-    protected AppDbContext context = null!;
-    protected UserRepository repository = null!;
+    private AppDbContext _context = null!;
+    private UserEfcoreRepository _efcoreRepository = null!;
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
@@ -41,23 +41,23 @@ public abstract class UserRepositoryTest
             .UseNpgsql(_dbContainer.GetConnectionString())
             .Options;
 
-        context = new AppDbContext(options);
+        _context = new AppDbContext(options);
 
         // Asegura que el esquema de la BD esté creado antes de cada prueba
-        await context.Database.EnsureCreatedAsync();
+        await _context.Database.EnsureCreatedAsync();
 
-        repository = new UserRepository(context);
+        _efcoreRepository = new UserEfcoreRepository(_context);
     }
 
     [TearDown]
     public async Task TearDown()
     {
         // Limpia la base de datos entre pruebas para garantizar el aislamiento
-        await context.Database.EnsureDeletedAsync();
-        await context.DisposeAsync();
+        await _context.Database.EnsureDeletedAsync();
+        await _context.DisposeAsync();
     }
 
-    protected static UserEntity CrearUsuario(int id, string nombre, string email) => new()
+    private static UserEntity CrearUsuario(int id, string nombre, string email) => new()
     {
         Id = id,
         Alias = "alias",
@@ -77,7 +77,7 @@ public abstract class UserRepositoryTest
     };
 
     [TestFixture]
-    public class CasosValidos : UserRepositoryTest
+    public class CasosValidos : UserEfcoreRepositoryTest
     {
         [Test]
         public async Task CreateAsync_UsuarioConId_LoGuardaConEseId()
@@ -86,8 +86,8 @@ public abstract class UserRepositoryTest
             var usuario = CrearUsuario(7, "Ana", "ana@mail.com");
 
             // Act
-            var creado = await repository.CreateAsync(usuario);
-            var guardado = await repository.GetByIdAsync(7);
+            var creado = await _efcoreRepository.CreateAsync(usuario);
+            var guardado = await _efcoreRepository.GetByIdAsync(7);
 
             // Assert
             creado.Id.Should().Be(7);
@@ -98,11 +98,11 @@ public abstract class UserRepositoryTest
         public async Task GetAllAsync_VariosUsuarios_LosDevuelveOrdenadosPorId()
         {
             // Arrange
-            await repository.CreateAsync(CrearUsuario(2, "Luis", "luis@mail.com"));
-            await repository.CreateAsync(CrearUsuario(1, "Ana", "ana@mail.com"));
+            await _efcoreRepository.CreateAsync(CrearUsuario(2, "Luis", "luis@mail.com"));
+            await _efcoreRepository.CreateAsync(CrearUsuario(1, "Ana", "ana@mail.com"));
 
             // Act
-            var resultado = (await repository.GetAllAsync()).ToList();
+            var resultado = (await _efcoreRepository.GetAllAsync()).ToList();
 
             // Assert
             resultado.Select(u => u.Id).Should().Equal(1, 2);
@@ -112,13 +112,13 @@ public abstract class UserRepositoryTest
         public async Task UpdateAsync_UsuarioExistente_ActualizaLosCampos()
         {
             // Arrange
-            await repository.CreateAsync(CrearUsuario(1, "Ana", "ana@mail.com"));
+            await _efcoreRepository.CreateAsync(CrearUsuario(1, "Ana", "ana@mail.com"));
             var cambios = CrearUsuario(1, "Ana María", "nueva@mail.com");
 
             // Act
-            var actualizado = await repository.UpdateAsync(cambios);
-            context.ChangeTracker.Clear();
-            var guardado = await repository.GetByIdAsync(1);
+            var actualizado = await _efcoreRepository.UpdateAsync(cambios);
+            _context.ChangeTracker.Clear();
+            var guardado = await _efcoreRepository.GetByIdAsync(1);
 
             // Assert
             actualizado.Should().NotBeNull();
@@ -131,11 +131,11 @@ public abstract class UserRepositoryTest
         public async Task DeleteAsync_UsuarioExistente_DevuelveTrueYLoElimina()
         {
             // Arrange
-            await repository.CreateAsync(CrearUsuario(1, "Ana", "ana@mail.com"));
+            await _efcoreRepository.CreateAsync(CrearUsuario(1, "Ana", "ana@mail.com"));
 
             // Act
-            var eliminado = await repository.DeleteAsync(1);
-            var buscado = await repository.GetByIdAsync(1);
+            var eliminado = await _efcoreRepository.DeleteAsync(1);
+            var buscado = await _efcoreRepository.GetByIdAsync(1);
 
             // Assert
             eliminado.Should().BeTrue();
@@ -146,12 +146,12 @@ public abstract class UserRepositoryTest
         public async Task DeleteAllAsync_ConUsuarios_DejaLaTablaVacia()
         {
             // Arrange
-            await repository.CreateAsync(CrearUsuario(1, "Ana", "ana@mail.com"));
-            await repository.CreateAsync(CrearUsuario(2, "Luis", "luis@mail.com"));
+            await _efcoreRepository.CreateAsync(CrearUsuario(1, "Ana", "ana@mail.com"));
+            await _efcoreRepository.CreateAsync(CrearUsuario(2, "Luis", "luis@mail.com"));
 
             // Act
-            await repository.DeleteAllAsync();
-            var resultado = await repository.GetAllAsync();
+            await _efcoreRepository.DeleteAllAsync();
+            var resultado = await _efcoreRepository.GetAllAsync();
 
             // Assert
             resultado.Should().BeEmpty();
@@ -168,8 +168,8 @@ public abstract class UserRepositoryTest
             };
 
             // Act
-            await repository.InsertRangeAsync(nuevos);
-            var resultado = (await repository.GetAllAsync()).ToList();
+            await _efcoreRepository.InsertRangeAsync(nuevos);
+            var resultado = (await _efcoreRepository.GetAllAsync()).ToList();
 
             // Assert
             resultado.Select(u => u.Id).Should().Equal(10, 11);
@@ -177,14 +177,14 @@ public abstract class UserRepositoryTest
     }
 
     [TestFixture]
-    public class CasosInvalidos : UserRepositoryTest
+    public class CasosInvalidos : UserEfcoreRepositoryTest
     {
         [TestCase(0)]
         [TestCase(999)]
         public async Task GetByIdAsync_IdInexistente_DevuelveNull(int id)
         {
             // Act
-            var resultado = await repository.GetByIdAsync(id);
+            var resultado = await _efcoreRepository.GetByIdAsync(id);
 
             // Assert
             resultado.Should().BeNull();
@@ -197,7 +197,7 @@ public abstract class UserRepositoryTest
             var cambios = CrearUsuario(id, "Ana", "ana@mail.com");
 
             // Act
-            var resultado = await repository.UpdateAsync(cambios);
+            var resultado = await _efcoreRepository.UpdateAsync(cambios);
 
             // Assert
             resultado.Should().BeNull();
@@ -207,7 +207,7 @@ public abstract class UserRepositoryTest
         public async Task DeleteAsync_IdInexistente_DevuelveFalse(int id)
         {
             // Act
-            var resultado = await repository.DeleteAsync(id);
+            var resultado = await _efcoreRepository.DeleteAsync(id);
 
             // Assert
             resultado.Should().BeFalse();

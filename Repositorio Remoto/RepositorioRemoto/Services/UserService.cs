@@ -1,6 +1,5 @@
 ﻿using RepositorioRemoto.Entity;
-using RepositorioRemoto.Models;
-using RepositorioRemoto.Repositories;
+using RepositorioRemoto.Repositories.Common;
 
 namespace RepositorioRemoto.Services;
 
