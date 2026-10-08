@@ -13,6 +13,7 @@ using RepositorioRemoto.Models;
 using RepositorioRemoto.Repositories.Common;
 using RepositorioRemoto.Repositories.Dapper;
 using RepositorioRemoto.Repositories.Sqlite;
+using RepositorioRemoto.Services.Background;
 using RepositorioRemoto.Services.Notificactions;
 using RepositorioRemoto.Services.Notifications;
 using RepositorioRemoto.Services.Users;
@@ -92,6 +93,7 @@ public static class DependenciesProvider
         // servicio
         services.AddScoped<IUserService, UserService>();
         services.AddSingleton<INotificationService, NotificationService>();
+        services.AddSingleton<BackgroundService>();
 
         // storage de exportación a JSON
         services.AddSingleton<IUserStorage>(_ => new UserStorage(AppConfig.ExportDirectory));
