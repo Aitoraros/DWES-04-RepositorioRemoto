@@ -63,7 +63,7 @@ public class UpdateUserRequestValidator : IValidator<UpdateUserRequest>
             errores.Add("El campo 'bs' de la compañía no puede superar los 150 caracteres.");
 
         return errores.Count > 0
-            ? Result.Failure<UpdateUserRequest, DomainError>(new UserErrors.Validation(errores))
+            ? Result.Failure<UpdateUserRequest, DomainError>(new UserError.Validation(errores))
             : Result.Success<UpdateUserRequest, DomainError>(request);
     }
 }

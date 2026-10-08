@@ -1,13 +1,14 @@
-﻿using RepositorioRemoto.Entity;
+﻿using CSharpFunctionalExtensions;
+using RepositorioRemoto.Dto;
+using RepositorioRemoto.Errors.Common;
 using RepositorioRemoto.Models;
 
 namespace RepositorioRemoto.Services;
 
-public interface IUserService
-{
-    Task<IEnumerable<UserEntity>> GetAllAsync();
-    Task<UserEntity?> GetByIdAsync(int id);
-    Task<UserEntity> AddAsync(UserEntity user);
-    Task<UserEntity?> UpdateAsync(UserEntity user);
-    Task<bool> DeleteAsync(int id);
+public interface IUserService {
+    Task<IEnumerable<User>> GetAllAsync();
+    Task<Result<User, DomainError>> GetByIdAsync(int id);
+    Task<Result<User, DomainError>> CreateAsync(CreateUserRequest request);
+    Task<Result<User, DomainError>> UpdateAsync(int id, UpdateUserRequest request);
+    Task<Result<User, DomainError>> DeleteAsync(int id);
 }

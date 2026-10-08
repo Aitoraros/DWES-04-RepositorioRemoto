@@ -8,8 +8,8 @@ namespace RepositorioRemoto.Tests.Validators;
 /// <summary>Tests deCreateUserRequestValidator. SetUp compartido por las clases internas.</summary>
 public abstract class CreateUserRequestValidatorTest
 {
-    protected CreateUserRequestValidator _validator = null!;
-    protected CreateUserRequest _requestValido = null!;
+    private CreateUserRequestValidator _validator = null!;
+    private CreateUserRequest _requestValido = null!;
 
     [SetUp]
     public void SetUp()
@@ -105,7 +105,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El nombre es obligatorio y debe tener entre 2 y 50 caracteres.");
         }
 
@@ -120,7 +120,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El nombre es obligatorio y debe tener entre 2 y 50 caracteres.");
         }
 
@@ -136,7 +136,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El alias es obligatorio, debe tener entre 3 y 20 caracteres y no puede contener espacios.");
         }
 
@@ -153,7 +153,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El email es obligatorio y tiene que seguir el formato 'xxx@xxx.xxx'.");
         }
 
@@ -168,7 +168,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("La calle no puede superar los 100 caracteres.");
         }
 
@@ -183,7 +183,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("La suite no puede superar los 50 caracteres.");
         }
 
@@ -198,7 +198,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("La ciudad no puede superar los 50 caracteres.");
         }
 
@@ -215,7 +215,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El código postal debe tener el formato '12345' o '12345-6789'.");
         }
 
@@ -231,7 +231,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("La latitud debe estar entre -90 y 90.");
         }
 
@@ -247,7 +247,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("La longitud debe estar entre -180 y 180.");
         }
 
@@ -263,7 +263,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El teléfono solo puede contener números, espacios y los símbolos + - ( ) . x (máximo 25 caracteres).");
         }
 
@@ -278,7 +278,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El teléfono solo puede contener números, espacios y los símbolos + - ( ) . x (máximo 25 caracteres).");
         }
 
@@ -293,7 +293,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("La web debe tener un formato válido, por ejemplo 'midominio.com'.");
         }
 
@@ -308,7 +308,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El nombre de la compañía no puede superar los 100 caracteres.");
         }
 
@@ -323,7 +323,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El eslogan no puede superar los 150 caracteres.");
         }
 
@@ -338,7 +338,7 @@ public abstract class CreateUserRequestValidatorTest
 
             // Assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Should().BeOfType<UserErrors.Validation>().Which.Errors.Should()
+            result.Error.Should().BeOfType<UserError.Validation>().Which.Errors.Should()
                 .Contain("El campo 'bs' de la compañía no puede superar los 150 caracteres.");
         }
     }

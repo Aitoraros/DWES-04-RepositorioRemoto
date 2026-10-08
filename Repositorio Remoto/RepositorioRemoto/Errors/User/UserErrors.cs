@@ -2,21 +2,18 @@
 
 namespace RepositorioRemoto.Errors.User;
 
-/// <summary>Errores relacionados con los datos y operaciones de usuario.</summary>
-public static class UserErrors
-{
-    /// <summary>Usuario no encontrado por ID (404).</summary>
-    /// <param name="Id">Identificador buscado.</param>
-    public sealed record NotFound(int Id)
-        : DomainError($"No se ha encontrado ningún usuario con el identificador: {Id}");
+/// <summary>Factory para crear errores de Usuario</summary>
+public static class UserErrors {
+    
+    /// <inheritdoc cref="UserError.NotFound"/>
+    public static DomainError NotFound(int id) =>
+        new UserError.NotFound(id);
 
-    /// <summary>Datos de usuario no válidos (400).</summary>
-    /// <param name="Errors">Lista de mensajes de validación.</param>
-    public sealed record Validation(IReadOnlyList<string> Errors)
-        : DomainError($"Errores de validación:{Environment.NewLine}• {string.Join($"{Environment.NewLine}• ", Errors)}");
+    /// <inheritdoc cref="UserError.Validation"/>
+    public static DomainError Validation(IReadOnlyList<string> errors) =>
+        new UserError.Validation(errors);
 
-    /// <summary>Fallo al escribir el fichero de exportación (500).</summary>
-    /// <param name="Detail">Detalle técnico del fallo.</param>
-    public sealed record ExportFailure(string Detail)
-        : DomainError($"Error al exportar usuarios: {Detail}");
+    /// <inheritdoc cref="UserError.ExportFailure"/>
+    public static DomainError ExportFailure(string detail) =>
+        new UserError.ExportFailure(detail);
 }
