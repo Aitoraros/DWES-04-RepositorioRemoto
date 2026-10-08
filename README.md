@@ -1,4 +1,4 @@
-# 🚀 REST User Management Service — Multi-Level Caching & Sync Architecture
+# 🚀 Práctica: servicio con almacenamiento local y remoto en .NET
 
 Un servicio de procesamiento e integración en **.NET 9 / C# 14** diseñado con **arquitectura limpia, almacenamiento híbrido en tres niveles, sincronización en segundo plano y notificación de eventos mediante Programación Reactiva**.
 
