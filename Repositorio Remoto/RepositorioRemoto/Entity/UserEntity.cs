@@ -6,9 +6,9 @@ namespace RepositorioRemoto.Entity;
 /// <summary>
 /// Representación de User para la BD
 /// </summary>
-[Table("Users")]
-public class UserEntity
-{
+[Table("users")]
+public class UserEntity {
+    
     /// <summary>
     /// ID del user, no incremental porque lo gestiona la API
     /// </summary>
