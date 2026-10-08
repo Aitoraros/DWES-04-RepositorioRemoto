@@ -11,7 +11,7 @@ using RepositorioRemoto.Errors.Common;
 using RepositorioRemoto.Errors.User;
 using RepositorioRemoto.Models;
 using RepositorioRemoto.Repositories.Common;
-using RepositorioRemoto.Services;
+using RepositorioRemoto.Services.Users;
 using RepositorioRemoto.Validators;
 
 namespace RepositorioRemoto.Tests.Services;
