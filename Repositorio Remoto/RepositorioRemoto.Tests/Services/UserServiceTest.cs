@@ -11,6 +11,7 @@ using RepositorioRemoto.Errors.Common;
 using RepositorioRemoto.Errors.User;
 using RepositorioRemoto.Models;
 using RepositorioRemoto.Repositories.Common;
+using RepositorioRemoto.Services.Notificactions;
 using RepositorioRemoto.Services.Users;
 using RepositorioRemoto.Validators;
 
@@ -25,6 +26,7 @@ public abstract class UserServiceTest
         private Mock<IUserRepository> _repository = null!;
         private Mock<ICache<int, User>> _cache = null!;
         private Mock<IJsonPlaceholderApi> _api = null!;
+        private Mock<INotificationService> _notificationService = null!;
         private UserService _service = null!;
 
         [SetUp]
@@ -34,8 +36,10 @@ public abstract class UserServiceTest
             _repository = new Mock<IUserRepository>();
             _cache = new Mock<ICache<int, User>>();
             _api = new Mock<IJsonPlaceholderApi>();
-            _service = new UserService(_createValidator.Object, _updateValidator.Object, _repository.Object, _cache.Object, _api.Object);
+            _notificationService = new Mock<INotificationService>();
+            _service = new UserService(_createValidator.Object, _updateValidator.Object, _repository.Object, _cache.Object, _api.Object, _notificationService.Object);
 
+            
             _createValidator.Setup(v => v.Validar(It.IsAny<CreateUserRequest>()))
                 .Returns((CreateUserRequest r) => Result.Success<CreateUserRequest, DomainError>(r));
             _updateValidator.Setup(v => v.Validar(It.IsAny<UpdateUserRequest>()))
@@ -152,6 +156,7 @@ public abstract class UserServiceTest
         private Mock<IUserRepository> _repository = null!;
         private Mock<ICache<int, User>> _cache = null!;
         private Mock<IJsonPlaceholderApi> _api = null!;
+        private Mock<INotificationService> _notificationService = null!;
         private UserService _service = null!;
 
         [SetUp]
@@ -161,7 +166,8 @@ public abstract class UserServiceTest
             _repository = new Mock<IUserRepository>();
             _cache = new Mock<ICache<int, User>>();
             _api = new Mock<IJsonPlaceholderApi>();
-            _service = new UserService(_createValidator.Object, _updateValidator.Object, _repository.Object, _cache.Object, _api.Object);
+            _notificationService = new Mock<INotificationService>();
+            _service = new UserService(_createValidator.Object, _updateValidator.Object, _repository.Object, _cache.Object, _api.Object, _notificationService.Object);
 
             _createValidator.Setup(v => v.Validar(It.IsAny<CreateUserRequest>()))
                 .Returns((CreateUserRequest r) => Result.Success<CreateUserRequest, DomainError>(r));

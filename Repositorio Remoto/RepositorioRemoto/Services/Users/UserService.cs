@@ -10,6 +10,7 @@ using RepositorioRemoto.Errors.User;
 using RepositorioRemoto.Mappers;
 using RepositorioRemoto.Models;
 using RepositorioRemoto.Repositories.Common;
+using RepositorioRemoto.Services.Notificactions;
 using RepositorioRemoto.Validators;
 using Serilog;
 
@@ -20,7 +21,8 @@ public class UserService(
     IValidator<UpdateUserRequest> updateValidator,
     IUserRepository repository,
     ICache<int, User> cache,
-    IJsonPlaceholderApi api) : IUserService
+    IJsonPlaceholderApi api, 
+    INotificationService notificationService) : IUserService
 {
     private readonly ILogger _logger = Log.ForContext<UserService>();
 
@@ -94,6 +96,12 @@ public class UserService(
             await cache.Add(guardado.Id, usuario);
 
             _logger.Information("Usuario creado con Id {Id}.", guardado.Id);
+            
+            notificationService.Notificar(new Notification(
+                Notification.NotificationType.Create,
+                $"Se ha creado el usuario con Id {guardado.Id}.",
+                DateTime.UtcNow));
+            
             return Result.Success<User, DomainError>(usuario);
         }
         catch (ApiException ex)
@@ -130,6 +138,12 @@ public class UserService(
             await cache.Add(id, modelo);
 
             _logger.Information("Usuario {Id} actualizado.", id);
+            
+            notificationService.Notificar(new Notification(
+                Notification.NotificationType.Update,
+                $"Se ha actualizado el usuario con Id {id}.",
+                DateTime.UtcNow));
+            
             return Result.Success<User, DomainError>(modelo);
         }
         catch (ApiException ex)
@@ -152,6 +166,12 @@ public class UserService(
             await cache.Remove(id);
 
             _logger.Information("Usuario {Id} eliminado.", id);
+            
+            notificationService.Notificar(new Notification(
+                Notification.NotificationType.Delete,
+                $"Se ha eliminado el usuario con Id {id}.",
+                DateTime.UtcNow));
+            
             return Result.Success<User, DomainError>(existe.ToModel());
         }
         catch (ApiException ex)

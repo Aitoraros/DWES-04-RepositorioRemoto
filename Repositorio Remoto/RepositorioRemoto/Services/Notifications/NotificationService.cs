@@ -5,7 +5,7 @@ using RepositorioRemoto.Services.Notificactions;
 
 namespace RepositorioRemoto.Services.Notifications;
 
-public class ConsoleNotificationService : INotificationService, IDisposable {
+public class NotificationService : INotificationService, IDisposable {
     
     private readonly Subject<Notification> _subject = new();
 
