@@ -14,6 +14,7 @@ using RepositorioRemoto.Repositories.Common;
 using RepositorioRemoto.Repositories.Dapper;
 using RepositorioRemoto.Repositories.Sqlite;
 using RepositorioRemoto.Services;
+using RepositorioRemoto.Storage;
 using RepositorioRemoto.Validators;
 using StackExchange.Redis;
 
@@ -88,6 +89,9 @@ public static class DependenciesProvider
 
         // servicio
         services.AddScoped<IUserService, UserService>();
+
+        // storage de exportación a JSON
+        services.AddSingleton<IUserStorage>(_ => new UserStorage(AppConfig.ExportDirectory));
 
         return services.BuildServiceProvider();
     }
